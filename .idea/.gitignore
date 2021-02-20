@@ -1,0 +1,10 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# CodeStream ignored files
+/../../giveaways\.idea/codestream.xml
+# Datasource local storage ignored files
+/../../../../:\Programs\giveaways\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/

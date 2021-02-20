@@ -1,0 +1,26 @@
+{
+  "name": "nextjs",
+  "version": "4.0.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "latest",
+    "@material-ui/icons": "^4.11.2",
+    "clsx": "latest",
+    "dotenv": "^8.2.0",
+    "firebase-admin": "^9.5.0",
+    "google-auth-library": "^7.0.2",
+    "googleapis": "^67.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "next": "latest",
+    "node-fetch": "^2.6.1",
+    "prop-types": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-google-login": "^5.2.2"
+  },
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  }
+}
