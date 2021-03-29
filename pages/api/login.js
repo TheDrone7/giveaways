@@ -18,7 +18,9 @@ export default async (req, res) => {
 
       auth.getUserByEmail(payload.email).then(user => {
 
-        const userKey = jwt.sign(user.toJSON(), process.env.clientSecret);
+        let userData = user.toJSON();
+        userData.token = req.body.response.tokenObj;
+        const userKey = jwt.sign(userData, process.env.clientSecret);
         res.status(200).json({ user: userKey });
 
       }).catch(async error => {
@@ -40,11 +42,11 @@ export default async (req, res) => {
                 displayName: payload.name,
                 photoURL: payload.picture
               }).catch(res.send);
-              console.log(channel);
-              console.log(newUser.uid, channel.id, channel.snippet.title, channel.snippet.description);
               await new Channel(newUser.uid, channel.id, channel.snippet.title, channel.snippet.description || 'No description').save();
               await new Participation(newUser.uid).save();
-              const userKey = jwt.sign(newUser.toJSON(), process.env.clientSecret);
+              let userData = newUser.toJSON();
+              userData.token = req.body.response.tokenObj;
+              const userKey = jwt.sign(userData, process.env.clientSecret);
               res.status(200).json({ user: userKey });
             }
           });

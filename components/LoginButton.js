@@ -1,6 +1,7 @@
 import React from 'react';
 import { GoogleLogin } from 'react-google-login';
 import Button from "@material-ui/core/Button";
+import refreshTokenSetup from '../src/refreshToken';
 
 const clientId = '690269576735-s6atuq17k2cpr244oate9ono3d9hbcov.apps.googleusercontent.com';
 const scope = ['email', 'profile', 'https://www.googleapis.com/auth/youtube.readonly'];
@@ -16,9 +17,9 @@ function Login() {
       let login = await loginResponse.json();
       document.cookie = 'user-key=' + login.user + ';' + document.cookie;
       window.location.replace('/home');
-    } else {
-      alert(`Trouble logging in :: ${await loginResponse.text()}`);
-    }
+    } else alert(`Trouble logging in :: ${await loginResponse.text()}`);
+
+    refreshTokenSetup(res);
   }
 
   const onFailure = (res) => {

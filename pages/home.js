@@ -3,9 +3,9 @@ import {Box, makeStyles, AppBar, Toolbar, Tabs, Tab} from '@material-ui/core';
 import fetch from 'node-fetch';
 import Logout from "../components/LogoutButton";
 import TabPanel from "../components/TabPanel";
-import Home from "../components/Home";
-import History from "../components/History";
-import Giveaways from "../components/Giveaways";
+import Home from "../components/pages/Home";
+import History from "../components/pages/History";
+import Giveaways from "../components/pages/Giveaways";
 
 function a11yProps(index) { return { id: `tab-${index}`, 'aria-controls': `tabpanel-${index}` }; }
 
@@ -14,7 +14,10 @@ export async function getServerSideProps(context) {
     const userResponse = await fetch(`http://localhost:3000/api/verify`, {
       headers: { 'Authorization': `JWT ${context.req.cookies['user-key']}`}
     }).then(res => res.json());
-    if (userResponse.user) return { props: userResponse };
+    const giveawaysResponse = await fetch(`http://localhost:3000/api/giveaways`, {
+      headers: { 'Authorization': `JWT ${context.req.cookies['user-key']}`}
+    }).then(res => res.json());
+    if (userResponse.user && giveawaysResponse.giveaways) return { props: { ...userResponse, giveaways: giveawaysResponse.giveaways, auth: context.req.cookies['user-key'] } };
     else return { redirect: { destination: '/', permanent: false } };
   } else return { redirect: { destination: '/', permanent: false } };
 }
@@ -36,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Index({ user, participation }) {
+export default function Index({ user, participation, giveaways, auth }) {
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -57,10 +60,10 @@ export default function Index({ user, participation }) {
       </AppBar>
       <Box display="flex" flexDirection="column" justifyContent="start" alignItems="center" height="100vh" py={12}>
         <TabPanel value={value} index={0}>
-          <Home onViewAll={() => { setValue(1) }} user={user} participation={participation.giveaways} />
+          <Home onViewAll={() => { setValue(1) }} user={user} participation={participation.giveaways} auth={auth} />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <Giveaways giveaways={[]} />
+          <Giveaways giveaways={giveaways.filter(g => (g.timeEnds * 1000) > Date.now())} participation={participation.giveaways} />
         </TabPanel>
         <TabPanel value={value} index={2}>
           <History onViewAll={() => { setValue(1) }} participation={participation.giveaways} />

@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "clsx": "latest",
     "dotenv": "^8.2.0",
     "firebase-admin": "^9.5.0",
@@ -16,7 +17,8 @@
     "prop-types": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-google-login": "^5.2.2"
+    "react-google-login": "^5.2.2",
+    "react-moment": "^1.1.1"
   },
   "scripts": {
     "dev": "next",

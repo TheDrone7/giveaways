@@ -6,6 +6,7 @@ const clientId = '690269576735-s6atuq17k2cpr244oate9ono3d9hbcov.apps.googleuserc
 
 function Logout() {
   const onSuccess = (res) => {
+    document.cookie='user-key=;max-age=0;path=/;' + document.cookie;
     window.location.replace('/');
   }
 
