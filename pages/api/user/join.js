@@ -2,7 +2,7 @@ import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library'
 import { config } from 'dotenv';
 import jwt from 'jsonwebtoken';
-import {Participation} from "../../../firebase";
+import {Participation, Giveaway, fieldValue} from "../../../firebase";
 config();
 
 export default async  (req, res) => {
@@ -26,7 +26,17 @@ export default async  (req, res) => {
               userGa.giveaways[req.query.ga].joined = 1;
               if (!userGa.giveaways[req.query.ga].referrals)
                 userGa.giveaways[req.query.ga].referrals = 0;
+              if (req.query.referred)
+                userGa.giveaways[req.query.ga].referred = true;
+              const ga = await new Giveaway(req.query.ga).fetch();
+              if (!ga.participants.includes(user.uid)) ga.participants.push(user.uid);
               await userGa.save();
+              await ga.save();
+              if (req.query.referred) {
+                const referrerGa = await new Participation(req.query.referred).fetch();
+                referrerGa.giveaways[req.query.ga].referrals += 1;
+                await referrerGa.save();
+              }
               res.status(200).send({ message: null });
             } else res.status(400).send({ message: 'You are not subscribed to the host. Subscribe and try again!' });
           }

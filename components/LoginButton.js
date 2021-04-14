@@ -16,7 +16,9 @@ function Login() {
     if (loginResponse.status === 200) {
       let login = await loginResponse.json();
       document.cookie = 'user-key=' + login.user + ';' + document.cookie;
-      window.location.replace('/home');
+      if (window.location.search !== '' && window.location.search.includes('redirect'))
+        window.location.replace(decodeURIComponent((new URLSearchParams(window.location.search)).get('redirect')));
+      else window.location.replace('/home');
     } else alert(`Trouble logging in :: ${await loginResponse.text()}`);
 
     refreshTokenSetup(res);

@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 import jwt from 'jsonwebtoken';
-import {Participation} from "../../../firebase";
+import {Giveaway, Participation} from "../../../firebase";
 config();
 
 export default async  (req, res) => {
@@ -14,6 +14,9 @@ export default async  (req, res) => {
         userGa.giveaways[req.query.ga].joined = 0;
         if (!userGa.giveaways[req.query.ga].referrals)
           userGa.giveaways[req.query.ga].referrals = 0;
+        const ga = await new Giveaway(req.query.ga).fetch();
+        if (ga.participants.includes(user.uid)) ga.participants.splice(ga.participants.indexOf(user.uid), 1);
+        await ga.save();
         await userGa.save();
         res.status(200).send({ message: null });
       } catch (error) {
